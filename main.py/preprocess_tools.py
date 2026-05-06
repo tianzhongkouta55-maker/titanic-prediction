@@ -16,10 +16,10 @@ def clean_titanic_data(df):
     # 敬称をAIが計算できる数字に変換
     title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 2, "Master": 3, "Rare": 1}
     df['Title'] = df['Title'].map(title_mapping)
-    df['Title'] = df['Title'].fillna(0)
+    df['Title'] = df['Title'].fillna(1) # タイトルがない場合は "Mr" として扱う
     
     # 2. 欠損値の補完
-    df['Age'] = df['Age'].fillna(df['Age'].median())
+    df['Age'] = df['Age'].fillna(df.groupby('Title')['Age'].transform('median')) # タイトルごとの中央値を使用
     df['Fare'] = df['Fare'].fillna(df['Fare'].mean()) # Day2のメモ通り平均値を使用
     
     # 3. 特徴量エンジニアリング（家族数の統合）
