@@ -25,6 +25,9 @@ def clean_titanic_data(df):
     # 2. 欠損値の補完
     df['Age'] = df['Age'].fillna(df.groupby('Title')['Age'].transform('median')) # タイトルごとの中央値を使用
     df['Fare'] = df['Fare'].fillna(df['Fare'].mean()) # Day2のメモ通り平均値を使用
+
+    # 運賃を対数変換（0の対策で +1 する np.log1p を使用）
+    df['Fare'] = np.log1p(df['Fare'])
     
     # 3. 特徴量エンジニアリング（家族数の統合）
     df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
