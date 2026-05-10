@@ -17,7 +17,11 @@ def clean_titanic_data(df):
     title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 2, "Master": 3, "Rare": 1}
     df['Title'] = df['Title'].map(title_mapping)
     df['Title'] = df['Title'].fillna(1) # タイトルがない場合は "Mr" として扱う
-    
+   
+    # 2. 性別（Sex）の数値化（追加）
+    # male を 0、female を 1 に変換します
+    df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
+
     # 2. 欠損値の補完
     df['Age'] = df['Age'].fillna(df.groupby('Title')['Age'].transform('median')) # タイトルごとの中央値を使用
     df['Fare'] = df['Fare'].fillna(df['Fare'].mean()) # Day2のメモ通り平均値を使用
@@ -26,5 +30,5 @@ def clean_titanic_data(df):
     df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
     
     # 必要な列だけを抽出
-    features = ['Pclass', 'Age', 'Fare', 'FamilySize', 'Title']
+    features = ['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Title']
     return df[features], df['Survived']
